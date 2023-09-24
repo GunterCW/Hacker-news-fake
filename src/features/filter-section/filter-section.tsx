@@ -1,8 +1,8 @@
-import { Box, Button, Flex, Section, Select } from "@radix-ui/themes";
+import { Box, Button, Flex, Select } from "@radix-ui/themes";
 
 export const FilterSection = () => {
   return (
-    <Section style={{ backgroundColor: "var(--pink-6)" }} size="1">
+    <Box mt="5">
       <Flex gap="5" ml="5">
         <Box style={{ width: "90px" }}>
           <Select.Root size="2">
@@ -20,6 +20,6 @@ export const FilterSection = () => {
         <Button size="2">Ask</Button>
         <Button size="2">Jobs</Button>
       </Flex>
-    </Section>
+    </Box>
   );
 };
