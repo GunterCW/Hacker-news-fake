@@ -19,14 +19,13 @@ export const SearchInput = (props: SearchInputProps) => {
       return;
     }
 
-    // setInputValue("");
+    setInputValue("");
   };
 
   const searchNewsOnEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
-      searchNews();
-      console.log(inputValue);
       getRequest();
+      searchNews();
     }
   };
 
