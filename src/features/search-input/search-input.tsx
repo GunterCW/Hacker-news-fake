@@ -3,15 +3,19 @@ import { Box, TextField } from "@radix-ui/themes";
 import React from "react";
 
 interface SearchInputProps {
-  inputValue: string;
-  setInputValue: (arg: string) => void;
-  getRequest: () => void;
+  searchInputValue: string;
+  onInputChange: (arg: string) => void;
+  toSendRequest: (arg?: string) => void;
 }
 
 export const SearchInput = (props: SearchInputProps) => {
-  const { inputValue, setInputValue, getRequest } = props;
+  const {
+    searchInputValue: inputValue,
+    onInputChange: setSearchValue,
+    toSendRequest: fetchNews,
+  } = props;
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
+    setSearchValue(event.target.value);
   };
 
   const searchNews = () => {
@@ -19,18 +23,15 @@ export const SearchInput = (props: SearchInputProps) => {
       return;
     }
 
-    // setInputValue("");
+    setSearchValue("");
   };
 
   const searchNewsOnEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
+      fetchNews();
       searchNews();
-      console.log(inputValue);
-      getRequest();
     }
   };
-
-  React.useEffect(() => {}, [inputValue]);
 
   return (
     <Box style={{ backgroundColor: "var(--pink-6)" }}>
