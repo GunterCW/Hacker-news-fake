@@ -1,59 +1,50 @@
 import { Box, Section } from "@radix-ui/themes";
 import { SearchInput } from "../search-input/search-input";
 import { FilterSection } from "../filter-section/filter-section";
-import React from "react";
 import { NewsList } from "../news-list/news-list";
+import React from "react";
 import axios from "axios";
 
-interface Response {
-  data: {
-    hits: Array<object>;
-  };
-}
-
 export const NewsListPage = () => {
-  const [inputValue, setInputValue] = React.useState<string>("");
-  const [newsList, setNewsList] = React.useState<any>([]);
+  const [searchValue, setSearchValue] = React.useState<string>("");
+  const [newsList, setNewsList] = React.useState<any>([]); // поменять тип
 
-  const createRequest = () => {
-    if (inputValue === "") {
+  const createSearchUrl = () => {
+    if (searchValue === "") {
       return;
     }
-    return "http://hn.algolia.com/api/v1/search?query=" + inputValue;
+    return "http://hn.algolia.com/api/v1/search?query=" + searchValue;
   };
 
-  const getRequest = () => {
-    axios
-      .get(
-        createRequest() ||
+  const fetchNews = async (url?: string) => {
+    try {
+      let result = await axios.get(
+        url ||
+          createSearchUrl() ||
           "http://hn.algolia.com/api/v1/search_by_date?tags=story"
-      )
-      .then(function (response: Response) {
-        setNewsList(response.data.hits);
-      })
-      .catch(function (error: string) {
-        console.log(error);
-      });
+      );
+      setNewsList(result.data.hits);
+    } catch (err) {
+      console.log(err);
+    }
   };
+
   React.useEffect(() => {
-    getRequest();
+    fetchNews();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <Box>
       <Section style={{ backgroundColor: "var(--pink-6)" }} size="1">
         <SearchInput
-          inputValue={inputValue}
-          setInputValue={setInputValue}
-          getRequest={getRequest}
+          searchInputValue={searchValue}
+          onInputChange={setSearchValue}
+          toSendRequest={fetchNews}
         />
         <FilterSection />
       </Section>
-      <NewsList
-        inputValue={inputValue}
-        newsList={newsList}
-        getRequest={getRequest}
-      />
+      <NewsList newsList={newsList} />
     </Box>
   );
 };
