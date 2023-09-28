@@ -6,7 +6,11 @@ import {
 } from "@radix-ui/react-icons";
 import { Box, Flex, Grid, Section, Text } from "@radix-ui/themes";
 import React from "react";
-import { TimeAgo } from "@/shared/time-ago";
+import TimeAgo from "timeago-react";
+import { NewsRating } from "../news-rating/news-rating";
+import { NewsTitle } from "../news-title/news-title";
+import { NewsAuthor } from "../news-author/news-author";
+import { SiteFromNewsWasTaken } from "../site-from-news-was-taken/site-from-news-was-taken";
 
 interface OneNews {
   points: string;
@@ -19,15 +23,11 @@ interface OneNews {
 }
 
 interface NewsListProps {
-  inputValue: string;
   newsList: [];
-  getRequest: () => void;
 }
 
 export const NewsList = (props: NewsListProps) => {
-  const { inputValue, newsList, getRequest } = props;
-
-  console.log(inputValue);
+  const { newsList } = props;
 
   const createUserLink = (author: string) => {
     return "https://news.ycombinator.com/user?id=" + author;
@@ -51,35 +51,36 @@ export const NewsList = (props: NewsListProps) => {
         <Section size="1">
           <Grid columns="12" rows="1">
             <Box ml="3" style={{ gridColumn: "span 1" }}>
-              {/* news rating */}
-              <Text>{oneNews.points}</Text>
+              <NewsRating numberOfPoints={oneNews.points} />
             </Box>
             <Box mr="9" style={{ gridColumn: "span 4" }}>
-              {/* news title */}
-              <Text>{oneNews.title}</Text>
+              <NewsTitle title={oneNews.title} />
             </Box>
             <Flex mr="9" align="center" style={{ gridColumn: "span 2" }}>
-              {/* author name */}
               <PersonIcon color="red" />
-              <a href={createUserLink(oneNews.author)}>{oneNews.author}</a>
+              <NewsAuthor
+                createUserLink={createUserLink}
+                authorName={oneNews.author}
+              />
             </Flex>
             <Flex mr="9" align="center" style={{ gridColumn: "span 2" }}>
               {/* site */}
               <GlobeIcon />
               <Box ml="1">
-                <a
-                  href={
-                    oneNews.url || createCommentaryForkLink(oneNews.objectID)
-                  }
-                >
-                  {createCroppedURL(oneNews.url, oneNews.objectID)}
-                </a>
+                <SiteFromNewsWasTaken
+                  url={oneNews.url}
+                  id={oneNews.objectID}
+                  createCommentaryForkLink={createCommentaryForkLink}
+                  createCroppedURL={createCroppedURL}
+                />
               </Box>
             </Flex>
             <Flex mr="9" align="center" style={{ gridColumn: "span 2" }}>
               {/* date */}
               <ClockIcon />
-              <Box ml="1">{TimeAgo(new Date(oneNews.created_at))}</Box>
+              <Box ml="1">
+                <TimeAgo datetime={oneNews.created_at} />
+              </Box>
             </Flex>
             <Flex mr="9" align="center" style={{ gridColumn: "span 1" }}>
               {/* comments number */}
@@ -96,3 +97,5 @@ export const NewsList = (props: NewsListProps) => {
     );
   });
 };
+
+// разделить все по компонентам
