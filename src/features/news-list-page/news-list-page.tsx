@@ -13,7 +13,7 @@ export const NewsListPage = () => {
     if (searchValue === "") {
       return;
     }
-    return "http://hn.algolia.com/api/v1/search?query=" + searchValue;
+    return "https://hn.algolia.com/api/v1/search?query=" + searchValue;
   };
 
   const fetchNews = async (url?: string) => {
@@ -21,7 +21,7 @@ export const NewsListPage = () => {
       let result = await axios.get(
         url ||
           createSearchUrl() ||
-          "http://hn.algolia.com/api/v1/search_by_date?tags=story"
+          "https://hn.algolia.com/api/v1/search_by_date?tags=story"
       );
       setNewsList(result.data.hits);
     } catch (err) {
